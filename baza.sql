@@ -1,0 +1,68 @@
+CREATE TABLE `members`( 
+	`id` INT UNSIGNED AUTO_INCREMENT,
+	 `user` VARCHAR(16),
+	 `pass` VARCHAR(50),
+	 INDEX(`user`(6)),
+	 PRIMARY KEY(`id`));
+
+CREATE TABLE `profiles`(
+			`id` INT UNSIGNED AUTO_INCREMENT,					
+			`user_id` INT UNSIGNED NOT NULL,
+			`dateofbirth` date,
+			PRIMARY KEY(`id`),
+			FOREIGN KEY(`user_id`) REFERENCES `members`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION);
+
+CREATE TABLE `friends`(
+						`id` INT UNSIGNED AUTO_INCREMENT,
+					`user_id` INT UNSIGNED NOT NULL,
+					`friend_id` INT UNSIGNED NOT NULL,
+					PRIMARY KEY(`id`),
+					FOREIGN KEY(`user_id`) REFERENCES `members`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION,
+					FOREIGN KEY(`friend_id`) REFERENCES `members`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION);
+
+CREATE TABLE `images`(
+						`id` INT UNSIGNED AUTO_INCREMENT,
+					`user_id` INT UNSIGNED NOT NULL,
+					`file_path` VARCHAR(100),
+					`date_update` DATETIME,
+					PRIMARY KEY(`id`),
+					FOREIGN KEY(`user_id`) REFERENCES `members`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION);
+
+CREATE TABLE `roles`(
+						`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+					`role_name` VARCHAR(50) NOT NULL,
+					PRIMARY KEY(`id`));
+
+CREATE TABLE `role_perm`(
+ `id` INT UNSIGNED NOT NULL AUTO_INCREMENT, 
+`role_id` INT UNSIGNED NOT NULL, 
+`perm_id` INT UNSIGNED NOT NULL, 
+PRIMARY KEY(`id`), 
+FOREIGN KEY(`role_id`) REFERENCES `roles`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION,
+ FOREIGN KEY(`perm_id`) REFERENCES `permissions`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION);
+
+CREATE TABLE `member_role`(
+						`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+					`member_id` INT UNSIGNED NOT NULL,
+					`role_id` INT UNSIGNED NOT NULL,
+					PRIMARY KEY(`id`),
+					FOREIGN KEY(`member_id`) REFERENCES `members`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION,
+					FOREIGN KEY(`role_id`) REFERENCES `roles`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION);
+
+
+CREATE TABLE `fields`(
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `adress` VARCHAR(45) NOT NULL,
+    `name` VARCHAR(45) NOT NULL,
+    `basket` int UNSIGNED NOT NULL,
+    `net` INT UNSIGNED NOT NULL,
+    PRIMARY KEY(`id`));
+
+CREATE TABLE `member_field`(
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`member_id` INT UNSIGNED NOT NULL,
+	`field_id` INT UNSIGNED NOT NULL,
+    `date_signed` date not null,
+    PRIMARY KEY(`id`),
+					FOREIGN KEY(`member_id`) REFERENCES `members`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION,
+					FOREIGN KEY(`field_id`) REFERENCES `fields`(`id`) ON UPDATE CASCADE ON DELETE NO ACTION);
